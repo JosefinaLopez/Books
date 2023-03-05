@@ -1,0 +1,36 @@
+{%extends "layout.html"%}
+{%block main%}
+<style>
+  body{
+    box-sizing: border-box;
+    background-image: url(/static/img/Portada3.webp);
+    background-size: cover;
+    padding: 0;
+    margin: 0;
+    position: relative;
+}
+</style>
+    <div class="formlogin">
+        <form action="/register" method="post">
+            <label class="log">Register</label>
+            <div class="col">
+                <input type="text" class="form-control" placeholder="Username" id='texbox' name="Username">
+              </div>
+              <div class="col">
+                <input type="password" class="form-control" placeholder="Password" id='texbox' name="Password">
+              </div>
+              <div class="col">
+                <input type="password" class="form-control" placeholder="Password Confirm" id='texbox' name="PasswordConfirm">
+              </div>
+              <div class="btn">
+                <button type="submit" class="btn btn-primary">Register</button>
+              </div>
+              <div class="registerfooter">
+                <a>Do you already have an account?</a>
+                <a href="/login">Log In</a>
+              </div>
+        </form>
+        
+    </div>
+
+{%endblock%}

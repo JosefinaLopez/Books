@@ -1,0 +1,60 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+
+.container{
+
+    background-color: white;
+    padding: 5%;
+    text-align: center;
+    left: 30%;
+    border-radius: 3%;
+    position: fixed;
+    margin-top: 15%;
+    max-width: 550px;
+
+    
+}
+.btnsearch{
+   position: relative;
+   top: 20px;
+}
+#TextboxSearch{
+    background-color: rgb(235, 233, 226);
+    width: 400px;
+    height: 40px;
+    border-color: rgb(0, 0, 0);
+    border-radius: 50px;
+}
+#uwu{
+    
+    top: 25px;
+}
+.log{
+    text-align: center;
+    color: rgb(255, 255, 255);
+    font-size: 40px;
+}
+.formlogin{
+    color: rgb(255, 255, 255);
+    position: fixed;
+    top: 21%; 
+    left: 37%; 
+    border-radius: 4%;
+    margin: 0 auto;
+    display: grid;
+    gap: 12px;
+    padding: 5%;
+    width: 400px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.651);
+   
+}
+#texbox{
+   background-color: white;
+   border-radius: 50px;
+   margin: 7px;
+}
+
+
