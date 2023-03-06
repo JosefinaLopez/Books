@@ -4,7 +4,8 @@ from helps import  login_required
 from flask_session import Session
 from source import conexion
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from dotenv import load_dotenv
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY')
@@ -15,18 +16,30 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-@app.route ('/')
+@app.route ('/',methods=["GET", "POST"])
+@login_required
 def index():
-  login_required
    #Variables
   busq = request.form.get("Search")
   option = request.form.get("option")
 
-  if request.method == "GET":
+  if request.method == "POST":
       if not busq:
         flash("write a search")
         return render_template("index.html") 
-      print("Resultado".format(option)) 
+      else: 
+         cursor = con.cursor()
+         if option == "Title":
+          cursor.execute("SELECT *FROM Book WHERE title = %s", (busq,))
+          row = cursor.fetchone()
+         elif option == "Isbn":
+            cursor.execute("SELECT *FROM Book WHERE Isbn = %s", (busq,))
+            row = cursor.fetchone()
+         elif option == "Year":
+             cursor.execute("SELECT *FROM Book WHERE year = %s", (busq,)) 
+             row = cursor.fetchone() 
+             print(row)
+         return render_template("index.html")
   else:  
     return render_template("index.html")
 
@@ -65,14 +78,17 @@ def register():
 @app.route ('/login', methods=["GET", "POST"])
 def login():
     
+    session.clear()
     user = request.form.get("Username") 
     passw = request.form.get("Password")
 
     if request.method == "POST":
         if not user:
             flash("Provide a User")
+            return render_template("login.html")
         if not passw:
-           flash("Provide a Password") 
+           flash("Provide a Password")
+           return render_template("login.html")  
 
         cursor = con.cursor()
         verificar = cursor.execute("SELECT *FROM Usser WHERE username = %s ", (user,))
@@ -81,7 +97,7 @@ def login():
           flash("User Or Password Invalid")
           return render_template("login.html")  
         
-        session["Id"] = row[0]
+        session["id"] = row[0]
         session["username"] = row[1]
         if row:
          return redirect("/")
