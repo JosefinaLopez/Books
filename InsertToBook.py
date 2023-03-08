@@ -1,8 +1,16 @@
 import csv
 from source import conexion
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 #Conexion a BD
-bd = conexion.conn('localhost', 'postgres','070918','Books')
+
+PGHOST = os.environ.get('PGHOST')
+PGUSER = os.environ.get('PGUSER')
+PGPASSWORD = os.environ.get('PGPASSWORD')
+PGDATABASE = os.environ.get('PGDATABASE')
+bd = conexion.conn(PGHOST, PGUSER, PGPASSWORD, PGDATABASE)
 #Se crea un cursor
 cursor = bd.cursor()
 
@@ -14,7 +22,7 @@ with open('books.csv', 'r') as csvfile:
     
     for row in lector:
     #Se ejecuta
-     cursor.execute("INSERT INTO Book (Isbn, Title,Author,Year) VALUES (%s,%s,%s,%s)" , row )
+     cursor.execute("INSERT INTO books (Isbn, Title,Author,Year) VALUES (%s,%s,%s,%s)" , row )
     #Se envia a la BD
     bd.commit()
     print("Tarea Completada Exitosamente")
