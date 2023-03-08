@@ -39,13 +39,13 @@ def index():
             cursor = con.cursor()
             if option == "Title":
                 cursor.execute(
-                    "SELECT isbn , title, author,year FROM Book WHERE title = %s", (busq,))
+                    "SELECT isbn , title, author,year FROM books WHERE title = %s", (busq,))
                 row = cursor.fetchone()
             elif option == "Isbn":
-                cursor.execute("SELECT *FROM Book WHERE Isbn = %s", (busq,))
+                cursor.execute("SELECT *FROM books WHERE Isbn = %s", (busq,))
                 row = cursor.fetchone()
             elif option == "Year":
-                cursor.execute("SELECT *FROM Book WHERE year = %s", (busq,))
+                cursor.execute("SELECT *FROM books WHERE year = %s", (busq,))
                 row = cursor.fetchone()
             print(row)
             return render_template("index.html")
