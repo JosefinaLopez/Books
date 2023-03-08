@@ -5,7 +5,8 @@ def conn(host , usser, pasw, data):
        host = host,
        user = usser,
        password = pasw,
-       database = data
+       database = data,
     ) 
-    return cn;  
+    cn.set_session(autocommit=True)
+    return cn
     

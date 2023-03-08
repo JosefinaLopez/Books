@@ -1,0 +1,1 @@
+ALTER TABLE usser ALTER COLUMN Password TYPE varchar(256);
