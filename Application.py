@@ -30,7 +30,7 @@ def index():
       else: 
          cursor = con.cursor()
          if option == "Title":
-          cursor.execute("SELECT *FROM Book WHERE title = %s", (busq,))
+          cursor.execute("SELECT isbn , title, author,year FROM Book WHERE title = %s", (busq,))
           row = cursor.fetchone()
          elif option == "Isbn":
             cursor.execute("SELECT *FROM Book WHERE Isbn = %s", (busq,))
@@ -38,7 +38,7 @@ def index():
          elif option == "Year":
              cursor.execute("SELECT *FROM Book WHERE year = %s", (busq,)) 
              row = cursor.fetchone() 
-             print(row)
+         print(row)
          return render_template("index.html")
   else:  
     return render_template("index.html")
