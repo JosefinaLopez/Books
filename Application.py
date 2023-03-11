@@ -5,6 +5,7 @@ from flask_session import Session
 from source import conexion
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
+import requests
 load_dotenv()
 
 app = Flask(__name__)
@@ -57,6 +58,13 @@ def index():
 def search():
     return render_template("result.html")
 
+@app.route('/data')
+def datos():
+    isbn = request.args.get("isbn")
+    # 0743454553
+    data = requests.get(f"https://www.googleapis.com/books/v1/volumes?q=isbn:0380795272").json()
+    
+    return data
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
