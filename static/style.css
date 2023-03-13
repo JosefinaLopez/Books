@@ -16,6 +16,19 @@ body{
 
     
 }
+.result-container{
+    display: grid;
+    text-align: center;
+    left: 3%;
+    right: 3%;
+    position: fixed;
+    margin-top: 15%;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2%;
+}
+.result-img{
+   max-width:120px;
+}
 .btnsearch{
    position: relative;
    top: 20px;
@@ -26,10 +39,11 @@ body{
     height: 40px;
     border-color: rgb(0, 0, 0);
     border-radius: 50px;
+    text-align: center;
 }
 #uwu{
     
-    top: 25px;
+    top: 50px;
 }
 .log{
     text-align: center;

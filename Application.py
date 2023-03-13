@@ -1,24 +1,18 @@
-import os
+import os 
 from flask import Flask, render_template, redirect, session, request, flash
 from helps import login_required
 from flask_session import Session
-from source import conexion
 from werkzeug.security import generate_password_hash, check_password_hash
-from dotenv import load_dotenv
-import requests
-load_dotenv()
+from sqlalchemy import create_engine, text
+from sqlalchemy.orm import scoped_session, sessionmaker
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY')
 
-PGHOST = os.environ.get('PGHOST')
-PGUSER = os.environ.get('PGUSER')
-PGPASSWORD = os.environ.get('PGPASSWORD')
-PGDATABASE = os.environ.get('PGDATABASE')
+engine = create_engine(os.getenv("DATABASE_URL"))
+# Crea la conexion
+db = scoped_session(sessionmaker(bind=engine))
 
-print(PGHOST, PGUSER, PGPASSWORD, PGDATABASE)
-
-con = conexion.conn(PGHOST, PGUSER, PGPASSWORD, PGDATABASE)
 
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
@@ -36,35 +30,44 @@ def index():
         if not busq:
             flash("write a search")
             return render_template("index.html")
-        else:
-            cursor = con.cursor()
+        else: 
             if option == "Title":
-                cursor.execute(
-                    "SELECT isbn , title, author,year FROM books WHERE title = %s", (busq,))
-                row = cursor.fetchone()
+                query = db.execute(text("SELECT Isbn , title, Author, Year From Book WHERE title = :title"), 
+                                   {"title":busq})
+                row = query.fetchone()
+                if row == None:
+                     flash("There is no recorded data that matches the given parameter")
+                else: 
+                    flash("Successful Search")   
+                    return render_template("result.html")
             elif option == "Isbn":
-                cursor.execute("SELECT *FROM books WHERE Isbn = %s", (busq,))
-                row = cursor.fetchone()
+                query = db.execute(text("SELECT Isbn , title, Author, Year From Book WHERE isbn = :isbn"), 
+                                   {"isbn":busq})
+                row = query.fetchone()
+                print(row)
+                if row == None:
+                     flash("There is no recorded data that matches the given parameter")
+                else: 
+                    flash("Successful Search")   
+                    return render_template("result.html")
             elif option == "Year":
-                cursor.execute("SELECT *FROM books WHERE year = %s", (busq,))
-                row = cursor.fetchone()
-            print(row)
+                query = db.execute(text("SELECT Isbn , title, Author, Year From Book WHERE year = :year"), 
+                                   {"year":busq})
+                row = query.fetchone()
+                print(row)
+                if row == None:
+                     flash("There is no recorded data that matches the given parameter")
+                else: 
+                    flash("Successful Search")   
+                    return render_template("result.html")
             return render_template("index.html")
-    else:
+    else: 
         return render_template("index.html")
 
-
-@app.route("/search", methods=["GET", "POST"])
-def search():
+@app.route('/result')
+def result():
     return render_template("result.html")
 
-@app.route('/data')
-def datos():
-    isbn = request.args.get("isbn")
-    # 0743454553
-    data = requests.get(f"https://www.googleapis.com/books/v1/volumes?q=isbn:0380795272").json()
-    
-    return data
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
@@ -84,12 +87,11 @@ def register():
             flash("Password do not much")
             return redirect("/register")
 
-        cursor = con.cursor()
         hash = generate_password_hash(passw)
-        cursor.execute(
-            "INSERT INTO usser (username, password) VALUES(%s, %s)", (user, hash))
-        con.commit()
-        cursor.close()
+        db.execute(text("INSERT INTO usser (username, password) VALUES(:username, :password)"), 
+                   {"username" :user, "password":hash})
+        db.commit()
+        db.close()
         flash("Successful registration")
         return redirect("/login")
     else:
@@ -111,11 +113,12 @@ def login():
             flash("Provide a Password")
             return render_template("login.html")
 
-        cursor = con.cursor()
-        verificar = cursor.execute(
-            "SELECT *FROM usser WHERE username = %s ", (user,))
-        row = cursor.fetchone()
-        print(row[2])
+       
+        verificar = db.execute(text("SELECT *FROM usser WHERE  username = :username")
+                               ,{"username":user})
+            
+        row = verificar.fetchone()
+        print(row[1])
         print(passw)
         print(check_password_hash(row[2], passw))
         if row == None or not check_password_hash(row[2], passw):
@@ -125,6 +128,7 @@ def login():
         session["user_id"] = row[0]
         session["username"] = row[1]
         if row:
+            flash("Welcome to Book " + user)
             return redirect("/")
         else:
             flash("User or Password Invalid")
@@ -132,6 +136,11 @@ def login():
     else:
         return render_template("login.html")
 
+@app.route("/lougout")
+def lougout():
+    session.clear()
+    flash("Session Cerrada")
+    return render_template("login.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
