@@ -45,6 +45,7 @@ def index():
                 else: 
                     book = row[1]
                     print(book)
+                    print(row)
                     flash("Successful Search")   
                     return render_template("result.html", busq = row)
             elif option == "Isbn":

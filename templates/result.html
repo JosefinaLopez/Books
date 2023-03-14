@@ -1,6 +1,5 @@
 {%extends "layout.html"%}
 {%block main%}
-{%for row in rows%}
 <div class="result-container">
     <div class="card mb-3" style="max-width: 540px;">
         <div class="row g-0">
@@ -9,15 +8,14 @@
           </div>
           <div class="col-md-8">
             <div class="card-body">
-                <h5 class="card-title">{{row[1]}}</h5>
-                <h6>{{row[2]}}</h6>
-                <h6>{{row[3]}}</h6>
+                <h5 class="card-title">{{busq[1]}}</h5>
+                <h6>{{busq[2]}}</h6>
+                <h6>{{busq[3]}}</h6>
               <button type="button" class="btn btn-primary">Ver mas</button>
             </div>
           </div>
         </div>
       </div>
-    {%endfor%}
 </div>
 
 {%endblock%}
