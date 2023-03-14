@@ -1,7 +1,7 @@
 {%extends "layout.html"%}
 {%block main%}
+{%for row in rows%}
 <div class="result-container">
-   
     <div class="card mb-3" style="max-width: 540px;">
         <div class="row g-0">
           <div class="col-md-4">
@@ -9,15 +9,15 @@
           </div>
           <div class="col-md-8">
             <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <h6>Author</h6>
-                <h6>Year</h6>
-              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <h5 class="card-title">{{row[1]}}</h5>
+                <h6>{{row[2]}}</h6>
+                <h6>{{row[3]}}</h6>
               <button type="button" class="btn btn-primary">Ver mas</button>
             </div>
           </div>
         </div>
       </div>
+    {%endfor%}
 </div>
 
 {%endblock%}

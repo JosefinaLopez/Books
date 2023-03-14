@@ -27,6 +27,11 @@ def index():
     option = request.form.get("option")
 
     if request.method == "POST":
+
+        consult = ('%' + busq + '%').title()
+        boo = consult.title()
+        print(boo)
+
         if not busq:
             flash("write a search")
             return render_template("index.html")
@@ -38,18 +43,22 @@ def index():
                 if row == None:
                      flash("There is no recorded data that matches the given parameter")
                 else: 
+                    book = row[1]
+                    print(book)
                     flash("Successful Search")   
-                    return render_template("result.html")
+                    return render_template("result.html", busq = row)
             elif option == "Isbn":
                 query = db.execute(text("SELECT Isbn , title, Author, Year From Book WHERE isbn = :isbn"), 
                                    {"isbn":busq})
                 row = query.fetchone()
+            
                 print(row)
                 if row == None:
                      flash("There is no recorded data that matches the given parameter")
                 else: 
+                    book = row[1]
                     flash("Successful Search")   
-                    return render_template("result.html")
+                    return render_template("result.html", busq = busq)
             elif option == "Year":
                 query = db.execute(text("SELECT Isbn , title, Author, Year From Book WHERE year = :year"), 
                                    {"year":busq})
@@ -57,16 +66,20 @@ def index():
                 print(row)
                 if row == None:
                      flash("There is no recorded data that matches the given parameter")
-                else: 
+                else:
+                    book = row[1]
                     flash("Successful Search")   
-                    return render_template("result.html")
+                    return render_template("result.html", row = row)
             return render_template("index.html")
     else: 
         return render_template("index.html")
 
-@app.route('/result')
-def result():
-    return render_template("result.html")
+@app.route("/books/<isbn>" ,methods=["GET" ,"POST"])
+@login_required
+def book(isbn): 
+
+    query = db.execute(text("SELECT *FROM book"))
+    return render_template("x")
 
 
 @app.route('/register', methods=["GET", "POST"])
